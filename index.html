@@ -27,9 +27,26 @@ function findMatches(wordToMatch, cities) {
   });
 }
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function displayMatches() {
   const matches = findMatches(this.value, cities);
-  console.log(matches);
+  const html = matches.map(location => {
+    const regexp = new RegExp(this.value, 'gi');
+    const cityName = location.city
+                    .replace(regexp, `<span class="hl">${this.value}</span>`);
+    const cityState = location.state
+                    .replace(regexp, `<span class="hl">${this.value}</span>`);
+    return `
+    <li>
+    <span class="name">${cityName}, ${cityState}</span>
+    <span class="population">${numberWithCommas(location.population)}</span>
+    </li>
+    `
+  }).join('');
+  suggestions.innerHTML = html;
 }
 
 const searchInput = document.querySelector('.search');
